@@ -229,3 +229,5 @@ if __name__ == "__main__":
     
     # Generar gráfico de barras apiladas para Clase_accidente y Gravedad
     graficar_barras_agrupadas(df_depurado)
+
+#primera version
