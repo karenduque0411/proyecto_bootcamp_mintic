@@ -2,6 +2,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from statsmodels.tsa.seasonal import seasonal_decompose
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.impute import SimpleImputer
+from sklearn.linear_model import LinearRegression
+fr.metrics import mean_squared_error, r2_score
 
 # Cargar archivo de accidentes
 def load_file_accidentes(file_path):
@@ -42,7 +47,7 @@ def analisis_exploratorio(df_accidentes):
 # Limpieza y ajuste de datos, incluyendo unificación de valores
 def ajustar_datos(df_accidentes):
     # Eliminación de columnas innecesarias
-    df_depurado = df_accidentes.drop(['Informes Policiales de Accidentes de Tránsito (IPAT) ', 
+    df_depurado = df_accidentes.drop(['Informes Policiales de Accidentes de Tránsito (IPAT) ', 'Latitud', 'Longitud',
                                        'Dirección', 'Barrio', 'Comuna', 'Corregimiento', 'Hipótesis',
                                        'Hipótesis 2', 'Motocicleta', 'Mes'], axis=1)
 
@@ -65,12 +70,14 @@ def ajustar_datos(df_accidentes):
     })
 
     # Ajuste del formato de fecha de accidente
-    df_depurado['Fecha del Accidente'] = df_depurado['Fecha del Accidente'].dt.strftime('%Y/%m/%d')
-
-    # Ajuste del formato de Hora
+    df_depurado['Fecha del Accidente'] = pd.to_datetime(df_depurado['Fecha del Accidente'])
+    
+    #Ajuste del formato de Hora para graficar
     if 'Hora' in df_depurado.columns:
         df_depurado['Hora'] = pd.to_datetime(df_depurado['Hora'], errors='coerce')
-        df_depurado['Hora'] = df_depurado['Hora'].dt.strftime('%H:%M')
+
+    # Se formatéa la hora de Hora para agrupar por cada hora
+    df_depurado['Hora'] = df_depurado['Hora'].dt.floor('h')
 
     # Renombre de columnas del df
     df_depurado = df_depurado.rename(columns={
@@ -122,13 +129,14 @@ def analisis_series_temporales(df_depurado):
     else:
         print("No se encontró una columna de 'Fecha_accidente' para realizar el análisis temporal.")
 
-
-
 # Ajustes adicionales y gráficas consolidadas
 def ajustar_y_graficar(df_depurado):
     # Primeras líneas del df depurado
     print("\nPrimeras líneas del df depurado\n")
     print(df_depurado.head(), "\n")
+    # Valores nulos por columna
+    print("\nValores nulos por columnas del archivo\n")
+    print(df_depurado.isnull().sum(), "\n")
 
     # Conteo de accidentes por mes
     df_depurado['conteo_accidentes'] = 0
@@ -149,7 +157,6 @@ def ajustar_y_graficar(df_depurado):
     plt.ylabel('Accidentalidad', fontsize=12)
     plt.xticks(range(1, 13), ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'])
     plt.legend(title='Año')
-
     plt.show()
 
 # Función para generar gráfico de barras agrupadas (Clase_accidente vs Gravedad)
@@ -166,7 +173,6 @@ def graficar_barras_agrupadas(df_depurado):
         # Crear tabla de contingencia para contar ocurrencias de accidentes según Clase y Gravedad
         tabla_clase_gravedad = pd.crosstab(df_depurado['Clase_accidente'], df_depurado['Gravedad'])
        
-
         # Reiniciar el índice para poder usarlo en seaborn
         tabla_clase_gravedad = tabla_clase_gravedad.reset_index()
 
@@ -210,7 +216,7 @@ if __name__ == "__main__":
     print("Bienvenidos al sistema de Análisis de Accidentes de Tránsito")
 
     # Ruta del archivo CSV
-    path_file_csv = '.\\data\\accidentes_transito.csv'
+    path_file_csv = '.\\proyecto\\data\\accidentes_transito.csv'
 
     # Cargar archivo
     df_accidentes = load_file_accidentes(path_file_csv)
@@ -230,4 +236,88 @@ if __name__ == "__main__":
     # Generar gráfico de barras apiladas para Clase_accidente y Gravedad
     graficar_barras_agrupadas(df_depurado)
 
-#primera version
+#Creando gráfica de para identificar la estacionalidad por días de la semana
+
+# 1. Creamos un diccionario para la traducción de los días de la semana
+dias_semana_espanol = {
+    'Monday': 'Lunes',
+    'Tuesday': 'Martes',
+    'Wednesday': 'Miércoles',
+    'Thursday': 'Jueves',
+    'Friday': 'Viernes',
+    'Saturday': 'Sábado',
+    'Sunday': 'Domingo'
+}
+
+# 2. Creamos columna con día de la semana según la fecha del accidente
+df_depurado['Dia_semana'] = df_depurado['Fecha_accidente'].dt.day_name().map(dias_semana_espanol)
+
+# 3. Agrupamos por días de la semana de cada accidente
+df_dia = df_depurado.groupby(['Dia_semana']).agg({'conteo_accidentes': 'sum'}).reset_index()
+
+# 4. Definición ejes X y Y
+plt.figure(figsize=(10,6))
+sns.lineplot(df_dia, x = 'Dia_semana', y = 'conteo_accidentes')
+
+# 5. Ajuste de etiquetas de datos
+plt.title('Estacionalidad de los accidentes en Fusagasugá del 2019 al 2023',fontsize=16)
+plt.xlabel('Día de la semana',fontsize=12)
+plt.ylabel('Accidentalidad',fontsize=12)
+plt.xticks(range(0,7), ['Lun','Mar','Mie','Jue','Vie','Sab','Dom'])
+plt.show()
+
+# Predicción de las horas en las que ocurriran los accidentes en el 2024
+
+# 1. Se debe agrupar los accidentes de acuerdo a la Hora de ocurrencia
+conteo_por_hora = df_depurado.groupby('Hora').size().reset_index(name='conteo')
+
+# 2. Separación de caracteristicas a predecir (X) (y)
+# 3. Se define Horas de la accidentalidad (X) como Variable Independiente
+X = conteo_por_hora[['Hora']].apply(lambda x: x.dt.hour)
+
+# 4. Se define conteo_por_hora (y) como la Variable Dependeinte
+y = conteo_por_hora['conteo']
+
+# 5. Se crea un imputador para rellenar los valores NaN en la variable independiente (usando la media)
+imputer = SimpleImputer(strategy='mean')
+
+# 6. Se imputa la media a la Característica (X) para rellenar los NaN en la variable dependiente
+X_imputado = imputer.fit_transform(X)
+
+# 7. Dividimos el conjunto de datos en entrenamiento (80%) y prueba (20%)
+X_train, X_test, y_train, y_test = train_test_split(X_imputado, y, test_size=0.2, random_state=42)
+
+# 8. Creamos y entrenamos el modelo de regresión lineal
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# 9. Se realiza la predicciones en el conjunto de prueba
+y_pred = model.predict(X_test)
+
+# 10. Evaluando el modelo
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+# 11. Mostrar los coeficientes de la regresión
+print(f"Coeficiente de regresión (pendiente): {model.coef_[0]}")
+print(f"Término independiente (intercepto): {model.intercept_}") #Identifica los valores cuando las variables independientes son cero
+print(f"Error cuadrático medio (MSE): {mse}")
+print(f"Coeficiente de determinación (R²): {r2}") #Debe tender a cero
+
+# 11. Visualizar los resultados con una gráfica
+plt.scatter(X, y, color='green', label="Datos reales")  # Datos originales
+plt.plot(X_test, y_pred, color='red', label="Línea de regresión")  # Línea de regresión
+plt.title('Regresión Lineal Simple: Horas ocurrecia accidentes vs. Accidentalidad')
+plt.xlabel('Horas ocurrecia accidentes')
+plt.ylabel('Accidentalidad')
+plt.legend()
+plt.show()
+
+#Formatéo de fecha de accidente (se hace en este lugar del código porque hacerlo antes no permite la graficación)
+df_depurado['Fecha_accidente'] = df_depurado['Fecha_accidente'].dt.date
+#Formatéo de Hora
+df_depurado['Hora'] = df_depurado['Hora'].dt.strftime('%H:%M')
+
+# Primeras líneas del df depurado
+print("\nPrimeras líneas del df depurado\n")
+print(df_depurado.head(), "\n")
