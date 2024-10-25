@@ -23,6 +23,14 @@ Identificar estacionalidad en los accidentes y determinar tendencias en la frecu
 Visualización: Uso de Python y Matplotlib para paneles interactivos.
 ## Documentación del Proyecto
 Desarrollo de un modelo de aprendizaje supervisado de pronóstico utilizando regresión lineal para predecir la accidentalidad en el municipio de Fusagasugá en el año 2024.
+## Instalación Librerías.
+Para ello, se han importado diversas librerías de Python que permitirán el manejo, análisis y visualización de datos.
+Librerías Utilizadas
+pandas
+matplotlib
+seaborn
+numpy
+scikit-learn
 ## Paso 1: Cargue de la base de datos
 Se realiza el cargue de la base de datos con la función load_file_accidentes(file_path). Esta base de datos contiene la estadística de accidentalidad de accidentes del Municipio de Fusagasugá entre Nov 2019 a junio 2024.
 ### Conversión Columna Fecha:
@@ -85,3 +93,98 @@ La función graficar_barras_agrupadas genera un gráfico de barras agrupadas que
 3. Creación de tabla de contingencia: Cuenta las ocurrencias de accidentes según la clase y la gravedad.
 4. Generación del gráfico: Utiliza Seaborn para crear un gráfico de barras agrupadas que muestra la distribución de accidentes por clase y gravedad.
 5. Configuración del gráfico: Ajusta el título, las etiquetas y la leyenda del gráfico, y muestra las etiquetas de los valores en cada barra.
+   
+## Paso 5: Creación código de Análisis estacional de los accidentes:
+### Creación de un Diccionario para la Traducción de los Nombres
+Se ha creado un diccionario para traducir los nombres de los días de la semana del inglés al español.
+dias_semana_espanol = {
+    'Monday': 'Lunes',
+    'Tuesday': 'Martes',
+    'Wednesday': 'Miércoles',
+    'Thursday': 'Jueves',
+    'Friday': 'Viernes',
+    'Saturday': 'Sábado',
+    'Sunday': 'Domingo'
+### Creación de Columna con Día de la Semana
+Se añadió una columna al DataFrame con el día de la semana correspondiente a la fecha del accidente.
+df_depurado['Dia_semana'] = df_depurado['Fecha_accidente'].dt.day_name().map(dias_semana_espanol)
+
+### Agrupación Mensual y Diaria de Accidentes
+Se agruparon los datos por mes y año, así como por días de la semana.
+df_mensual = df_depurado.groupby(['año', 'mes']).agg({'conteo_accidentes': 'sum'}).reset_index()
+df_dia = df_depurado.groupby(['Dia_semana']).agg({'conteo_accidentes': 'sum'}).reset_index()
+
+## Visualización de los Datos:
+
+Se generaron gráficos para analizar la estacionalidad de los accidentes:
+
+### Gráfica consolidada por año
+plt.figure(figsize=(10,6))
+sns.lineplot(df_mensual, x = 'mes', y = 'conteo_accidentes', hue = 'año', palette='bright')
+plt.title('Accidentalidad consolidada 2019 - 2023', fontsize=16)
+plt.xlabel('Mes', fontsize=12)
+plt.ylabel('Accidentalidad', fontsize=12)
+plt.xticks(range(1,13), ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'])
+plt.legend(title='año')
+plt.show()
+
+![Imagen de WhatsApp 2024-10-25 a las 18 36 16_6480506a](https://github.com/user-attachments/assets/e68a6614-b908-4fc6-9be8-a66c7ad1b9c3)
+
+
+### Gráfica de estacionalidad por días de la semana
+
+plt.figure(figsize=(10,6))
+sns.lineplot(df_dia, x = 'Dia_semana', y = 'conteo_accidentes')
+plt.title('Estacionalidad de los accidentes en Fusagasugá del 2019 al 2023', fontsize=16)
+plt.xlabel('Día de la semana', fontsize=12)
+plt.ylabel('Accidentalidad', fontsize=12)
+plt.xticks(range(0,7), ['Lun','Mar','Mie','Jue','Vie','Sab','Dom'])
+plt.show()
+
+![Imagen de WhatsApp 2024-10-25 a las 18 38 11_950017a8](https://github.com/user-attachments/assets/ac5d635d-98d9-4309-8414-b30f69c49935)
+
+## Paso 6: Creación Código para la Predicción de Horas de Accidentes en 2024
+### Simulación de Datos
+Se simulan los datos de horas de accidentalidad y los conteos de accidentes.
+X = df_depurado['Hora'].values.reshape(-1, 1)  # Horas de la accidentalidad
+y = df_depurado['conteo_accidentes'].values  # Conteo de accidentes
+
+### División del Conjunto de Datos
+El conjunto de datos se divide en entrenamiento (80%) y prueba (20%).
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+### Creación y Entrenamiento del Modelo de Regresión Lineal
+Se crea y entrena un modelo de regresión lineal con los datos de entrenamiento.
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+### Realización de Predicciones
+Se realizan predicciones en el conjunto de prueba.
+y_pred = model.predict(X_test)
+
+### Evaluación del Modelo
+Se evalúa el modelo utilizando métricas como el error cuadrático medio (MSE) y el coeficiente de determinación (R²).
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+print(f"Coeficiente de regresión (pendiente): {model.coef_[0]}")
+print(f"Término independiente (intercepto): {model.intercept_}")
+print(f"Error cuadrático medio (MSE): {mse}")
+print(f"Coeficiente de determinación (R²): {r2}")
+
+### Visualización de Resultados
+Se visualizan los resultados con una gráfica de dispersión y la línea de regresión.
+plt.scatter(X, y, color='green', label="Datos reales")
+plt.plot(X_test, y_pred, color='red', label="Línea de regresión")
+plt.title('Regresión Lineal Simple: Horas ocurrencia accidentes vs. Accidentalidad')
+plt.xlabel('Horas ocurrencia accidentes')
+plt.ylabel('Accidentalidad')
+plt.legend()
+plt.show()
+
+### Visualización de las Primeras Líneas del DataFrame Depurado
+Se muestran las primeras líneas del DataFrame para confirmar la correcta ejecución del preprocesamiento.
+print(df_depurado.conteo_accidentes.dtype)
+print(df_depurado.conteo_accidentes)
+
+![Imagen de WhatsApp 2024-10-25 a las 18 49 50_5c05b638](https://github.com/user-attachments/assets/531b4d68-6f57-4496-89dc-d130e549b218)
+
