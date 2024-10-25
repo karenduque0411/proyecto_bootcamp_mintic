@@ -17,10 +17,10 @@ CSV de Datos Abiertos: “Accidentes de Tránsito registrados en el municipio de
 ### Marco Temporal: 
 2019 - 2023.
 ## Metodología:
-Recolección y limpieza de datos: Se eliminarán valores atípicos y se gestionarán los datos faltantes.
-EDA (Análisis de datos exploratorios): Generar estadísticas y gráficos descriptivos (histogramas, box plots) para identificar distribuciones de variables clave como tipo de accidente y severidad.
-Identificar estacionalidad en los accidentes y determinar tendencias en la frecuencia de accidentes a lo largo del tiempo.
-Visualización: Uso de Python y Matplotlib para paneles interactivos.
+Recolección y limpieza de datos: se eliminan columnas innecesarias y se renombran los campos.
+EDA (Análisis de datos exploratorios): Generar estadísticas y gráficos descriptivos para identificar comportamientos de variables clave como clase de accidente y gravedad.
+Identificar estacionalidad en los accidentes y determinar tendencias en la frecuencia de accidentes a lo largo del tiempos
+Visualización: Uso de Python, Matplotlib y Seaborn para paneles interactivos.
 ## Documentación del Proyecto
 Desarrollo de un modelo de aprendizaje supervisado de pronóstico utilizando regresión lineal para predecir la accidentalidad en el municipio de Fusagasugá en el año 2024.
 ## Paso 1: Cargue de la base de datos
