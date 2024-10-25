@@ -11,7 +11,7 @@ Desarrollar un modelo de aprendizaje supervisado utilizando regresión lineal pa
 4. Realizar la predicción de accidentes en el año 2024 identificando las horas en que ocurriran los accidentes de tránsito.
 ## Delimitación del Proyecto
 ### Alcance: 
-Este proyecto analizará los datos de accidentalidad en el municipio de Fusagasugá entre los años 2019 y 2023. El análisis se  centrará en identificar los factores que influyen en la accidentalidad del municipio y definir el modelo predictivo del año 2024. 
+Este proyecto analizará los datos de accidentalidad en el municipio de Fusagasugá entre los años 2019 y 2023. El análisis se  centrará en identificar los factores que influyen en la accidentalidad del municipio y definir el modelo predictivo del año 2024 respecto a las horas de la posible ocurrencia del accidente. 
 ### Fuentes de Datos: 
 CSV de Datos Abiertos: “Accidentes de Tránsito registrados en el municipio de Fusagasugá”, por la Secretaría de Movilidad de la Alcaldía del municipio de Fusagasugá.
 ### Marco Temporal: 
@@ -32,7 +32,7 @@ En este paso se realiza análisis exploratorio realizado sobre la base de datos 
 ## Limpieza de los Datos:
 En el proceso de limpieza de los datos en el dataframe de accidentes de tránsito se eliminan columnas innecesarias, unifica valores en ciertas columnas, ajusta formatos de fecha y hora y renombra columnas para mayor claridad. 
 ### Las columnas que fueron depuradas son: 
-'Informes Policiales de Accidentes de Tránsito (IPAT) ', 'Dirección', 'Barrio', 'Comuna', 'Corregimiento', 'Hipótesis',                   'Hipótesis 2', 'Motocicleta', 'Mes'] 
+'Informes Policiales de Accidentes de Tránsito (IPAT) ', 'Latitud', 'Longitud', 'Dirección', 'Barrio', 'Comuna', 'Corregimiento', 'Hipótesis', 'Hipótesis 2', 'Motocicleta', 'Mes'] 
 ### Los datos que se unificaron o reemplazaron corresponden a la columna Clase_accidente y Gravedad respectivamente son: 
 CAIDA OCUPANTE': 'CAIDA OCUPANTE',
         'CAÍDA': 'CAIDA OCUPANTE',
