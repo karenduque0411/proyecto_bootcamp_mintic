@@ -3,7 +3,7 @@
 ## Introducción
 El proyecto aborda el análisis de los accidentes de tránsito del Municipio de Fusagasugá utilizando los datos históricos para identificar patrones y tendencias que puedan ser útiles para implementar estrategias de seguridad vial. A través del análisis de datos se pretende crear un modelo de predicción que permita a los interesados tomar decisiones, acciones y estrategias para prevenir la ocurrencia de estos. Algunos aspectos relevantes dentro del análisis son el tipo de accidente, el día, la clase de accidente y gravedad. Los resultados del análisis y el modelo como tal permitirán proponer medidas efectivas para reducir el número de accidentes y la seguridad vial del municipio de Fusagasugá.
 ## Objetivo General:
-Desarrollar un modelo de aprendizaje supervisado utilizando regresión lineal para predecir la hora en la que se presenta la accidentabilidad en el municipio de Fusagasugá durante el año 2024, con el fin de proporcionar información para la toma de decisiones en la gestión de seguridad vial.
+Desarrollar un modelo de aprendizaje supervisado utilizando regresión lineal para predecir la hora en la que se posiblemente se presentarán los accidentes en Fusagasugá durante el año 2024, proporcionando información para la toma de decisiones en la gestión de seguridad vial de sus habitantes como de la población flotante.
 ### Objetivos Especificos:
 1. Identificar las principales clases de accidemtes que ocurren en el Municipio así como la frecuencia de las mismas a fin de obtener información clara respecto de las que mas afectan la accidentalidad. 
 2. Mapear el impacto en la salud de las personas de la accidentalidad a partir de los datos obtenidos en la categoría Gravedad.
