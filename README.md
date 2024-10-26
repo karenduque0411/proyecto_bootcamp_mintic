@@ -3,15 +3,15 @@
 ## Introducción
 El proyecto aborda el análisis de los accidentes de tránsito del Municipio de Fusagasugá utilizando los datos históricos para identificar patrones y tendencias que puedan ser útiles para implementar estrategias de seguridad vial. A través del análisis de datos se pretende crear un modelo de predicción que permita a los interesados tomar decisiones, acciones y estrategias para prevenir la ocurrencia de estos. Algunos aspectos relevantes dentro del análisis son el tipo de accidente, el día, la clase de accidente y gravedad. Los resultados del análisis y el modelo como tal permitirán proponer medidas efectivas para reducir el número de accidentes y la seguridad vial del municipio de Fusagasugá.
 ## Objetivo General:
-Desarrollar un modelo de aprendizaje supervisado utilizando regresión lineal para predecir la hora en la que se posiblemente se presentarán los accidentes en Fusagasugá durante el año 2024, proporcionando información para la toma de decisiones en la gestión de seguridad vial de sus habitantes como de la población flotante.
-### Objetivos Especificos:
-1. Identificar las principales clases de accidemtes que ocurren en el Municipio así como la frecuencia de las mismas a fin de obtener información clara respecto de las que mas afectan la accidentalidad. 
+Desarrollar un modelo de aprendizaje supervisado utilizando regresión lineal para predecir la hora y día en la que se posiblemente se presentarán los accidentes en Fusagasugá durante el año 2024, proporcionando información para la toma de decisiones en la gestión de seguridad vial de sus habitantes como de la población flotante.
+### Objetivos Específicos:
+1. Identificar las principales clases de accidentes que ocurren en el Municipio, así como la frecuencia de las mismas a fin de obtener información clara respecto de las que mas afectan la accidentalidad. 
 2. Mapear el impacto en la salud de las personas de la accidentalidad a partir de los datos obtenidos en la categoría Gravedad.
-3. Análizar la estacional de los accidentes ocurridos en los años 2019 al 2023 con el fin de dentificar tendencias y picos de acuerdo con los días de la semana en que ocurrieron de tal forma que contribuya a la implementación de medidas de prevención mas eficaces.
-4. Realizar la predicción de accidentes en el año 2024 identificando las horas en que ocurriran los accidentes de tránsito.
+3. Analizar la estacional de los accidentes ocurridos en los años 2019 al 2023 con el fin de identificar tendencias y picos de acuerdo con los días de la semana en que ocurrieron de tal forma que contribuya a la implementación de medidas de prevención más eficaces.
+4. Realizar la predicción de accidentes en el año 2024 identificando las horas en que ocurrirán los accidentes de tránsito.
 ## Delimitación del Proyecto
 ### Alcance: 
-Este proyecto analizará los datos de accidentalidad en el municipio de Fusagasugá entre los años 2019 y 2023. El análisis se  centrará en identificar los factores que influyen en la accidentalidad del municipio y definir el modelo predictivo del año 2024. 
+Este proyecto analizará los datos de accidentalidad en el municipio de Fusagasugá entre los años 2019 y 2023. El análisis se centrará en identificar los factores que influyen en la accidentalidad del municipio y definir el modelo predictivo del año 2024. 
 ### Fuentes de Datos: 
 CSV de Datos Abiertos: “Accidentes de Tránsito registrados en el municipio de Fusagasugá”, por la Secretaría de Movilidad de la Alcaldía del municipio de Fusagasugá.
 ### Marco Temporal: 
@@ -19,7 +19,7 @@ CSV de Datos Abiertos: “Accidentes de Tránsito registrados en el municipio de
 ## Metodología:
 Recolección y limpieza de datos: se eliminan columnas innecesarias y se renombran los campos.
 EDA (Análisis de datos exploratorios): Generar estadísticas y gráficos descriptivos para identificar comportamientos de variables clave como clase de accidente y gravedad.
-Identificar estacionalidad en los accidentes y determinar tendencias en la frecuencia de accidentes a lo largo del tiempos
+Identificar estacionalidad en los accidentes y determinar tendencias en la frecuencia de accidentes a lo largo del tiempo
 Visualización: Uso de Python, Matplotlib y Seaborn para paneles interactivos.
 ## Documentación del Proyecto
 Desarrollo de un modelo de aprendizaje supervisado de pronóstico utilizando regresión lineal para predecir la accidentalidad en el municipio de Fusagasugá en el año 2024.
@@ -93,7 +93,11 @@ La función graficar_barras_agrupadas genera un gráfico de barras agrupadas que
 3. Creación de tabla de contingencia: Cuenta las ocurrencias de accidentes según la clase y la gravedad.
 4. Generación del gráfico: Utiliza Seaborn para crear un gráfico de barras agrupadas que muestra la distribución de accidentes por clase y gravedad.
 5. Configuración del gráfico: Ajusta el título, las etiquetas y la leyenda del gráfico, y muestra las etiquetas de los valores en cada barra.
-   
+
+
+   ![Imagen de WhatsApp 2024-10-25 a las 19 29 51_32c7c20e](https://github.com/user-attachments/assets/f4d9f776-b34f-4c62-bbfa-c2bbe2c39e44)
+
+
 ## Paso 5: Creación código de Análisis estacional de los accidentes:
 ### Creación de un Diccionario para la Traducción de los Nombres
 Se ha creado un diccionario para traducir los nombres de los días de la semana del inglés al español.
@@ -188,3 +192,32 @@ print(df_depurado.conteo_accidentes)
 
 ![Imagen de WhatsApp 2024-10-25 a las 18 49 50_5c05b638](https://github.com/user-attachments/assets/531b4d68-6f57-4496-89dc-d130e549b218)
 
+## Información componentes del CSV
+
+Información de la entidad:
+
+Departamento: Cundinamarca
+Municipio Fusagasugá
+Nombre de la Entidad: Alcaldía de Fusagasugá
+Área o dependencia:Secretaría de Movilidad
+
+
+Información de Datos
+
+Idioma:Español
+Cobertura Geográfica: Municipal
+Frecuencia de Actualización: Anual
+Fecha Emisión (aaaa-mm-dd): 2024-05-3
+
+Filas: 1.392
+Columnas: 27
+
+Columnas: Informes Policiales de Accidentes de Tránsito (IPAT), Fecha de Accidente, Dirección, Latitud, Longitud, Barrio, Comuna, Corregimiento, Genero, Hora, Gravedad, Clase de Accidente, Choque Con, Clase de Vehículo 1, Servicio, Gravedad Conductor, Embriaguez, Grado, Clase de Vehículo 2, Servicio 2,Hipótesis 2,Gravedad Conductor 2, Embriaguez 2, Grado 2, Motocicleta, Mes
+
+## Conclusiones:
+
+1. La alta accidentalidad se prresenta durante los fines de semanaa en las horas de la noche y en la madrugada. Se deben aunar esfuerzos por parte de autoridades y organismos de prevención municipal y Departamental para adoptar medidas de control para prevenir accidentes especialmente en estas horas y días mencionados. El numero de accidentes podría reducir en un 25% solo si se toman acciones durante el fin de semana. 
+
+## Referencias:
+
+Ministerio de Transporte de Colombia. (n.d.). Accidentes de Tránsito registrados en el municipio. Datos Abiertos Colombia. Recuperado de https://www.datos.gov.co/Transporte/Accidentes-de-Tr-nsito-registrados-en-el-municipio/22ip-4jk2/about_data
